@@ -1,50 +1,64 @@
-# Pipelined MIPS32 Processor
+# MIPS32 Pipelined Processor
+
+![Processor diagram](https://github.com/KirbyBurkeJr/mips32-pipelined-processor/blob/main/doc/mips32_processor_diagram.png)
 
 ## Overview
 
-This repository contains the Verilog design and resources for a simplified implementation of a pipelined MIPS32 processor with hazard mitigation, and supporting documentation. For a high-level description of the processor development, visit the [Pipelined MIPS32 Processor](https://kirbyburkejr.com/projects/verilog-mips32-processor) page on my portfolio site.
+This repository contains the Verilog design for a MIPS32 pipelined processor that supports multiple concurrent instructions and includes dedicated resources to mitigate data and control hazards. For more information, visit the [MIPS32 Pipelined Processor](https://kirbyburkejr.com/projects/mips32-pipelined-processor) page on my portfolio site.
 
 ## Features
 
-### Pipelined Processing
+This processor includes a five-stage pipelined datapath, sets of pipeline registers, and two hazard mitigation units that work together to process a subset of MIPS32 instructions.
 
-This processor design adheres to the five-stage RISC pipeline, capable of simultaneous instruction processing. This includes hazard mitigation units to explicitly resolve data and control hazards, and the arrangement of its components inherently prevents structural hazards.
+### Five-Stage Datapath
+
+The design includes a classic five-stage datapath, with banks of pipeline registers between each stage.
+
+**Datapath**
+
+- Instruction Fetch (IF)
+- Instruction Decode (ID)
+- Execution (EX)
+- Memory Access (MEM)
+- Write Back (WB)
+
+**Pipeline Registers**
+
+- IF/ID
+- ID/EX
+- EX/MEM
+- MEM/WB
+
+### Hazard Mitigation Units
+
+Data Forwarding unit performs execution forwarding, for data hazards, when possible.
+
+Hazard Detection unit supports Data Forwarding with stalling, and handles control hazards with stalling and flushing.
 
 ### Supported MIPS32 Instructions
 
-The basis of this design is a simplified MIPS implementation, used within a college engineering course. So, some instruction implementations deviate from those in the classic MIPS32 ISA. That said, this processor supports the following instructions.
+This processor supports a subset of 21 MIPS32 R-, I-, and J-type instructions.
 
-**R-Type**
+**R-Type (12)**
 
-- add
-- and
-- div+
-- mult+
-- nor
-- or
-- sll
-- slt
-- sra
-- srl
-- sub
-- xor
+- Arithmetic (4): ADD, SUB, MULT, & DIV
+- Logical (4): AND, OR, NOR, & XOR
+- Shift (3): SLL, SRL, & SRA
+- Compare (1): SLT
+
 
 + Non-standard implementations used for div and mult instructions.
 
-**I-Type**
+**I-Type (8)**
 
-- addi
-- andi
-- beq
-- bne
-- lw
-- ori
-- sw
-- xori
+- Arithmetic (1): ADDI
+- Logical (3): ANDI, ORI, & XORI
+- Load/Store (2): LW & SW
+- Branch (2): BEQ & BNE
 
-**J-Type**
+**J-Type (1)**
 
-- j (jump)
+- J (jump)
 
 ## Directories
 
@@ -55,11 +69,11 @@ The basis of this design is a simplified MIPS implementation, used within a coll
 
 **src/design/**
 
-Contains all the Verilog module designs.
+Contains the MIPS32_Processor.v design file and designs for its 16 dependencies.
 
 **src/testbench/**
 
-Contains the MIPS32 Processor test bench design.
+- tb_MIPS32_Processor.v
 
 **sim/**
 
@@ -71,8 +85,8 @@ Contains the MIPS32 Processor test bench design.
 ### Cloning the Repository
 
 ```bash
-git clone https://github.com/kirbyburkejr/verilog-mips32-processor.git
-cd verilog-mips32-processor
+git clone https://github.com/KirbyBurkeJr/mips32-pipelined-processor.git
+cd mips32-pipelined-processor
 ```
 
 ### Running the Simulation
@@ -96,7 +110,6 @@ Tables with bit allocation for each instruction type.
 ### Tools Used
 
 - [Vivado v2023.2 (64-bit)](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2023-2.html) for Verilog module design and waveform generation.
-- [Lucidchart](https://www.lucidchart.com/pages/) for block diagrams.
 
 ## License
 
